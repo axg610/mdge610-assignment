@@ -258,6 +258,11 @@ void ParseOptionsEM(int argc, char **argv, ProgramOptions &opt) {
                                          {"priors", required_argument, 0, 'p'},
                                          {"union", no_argument, &do_union_flag, 1},
                                          {"no-jump", no_argument, &no_jump_flag, 1},
+                                         // new options
+                                         {"em-alpha-limit", required_argument, 0, 'A'},
+                                         {"em-alpha-change", required_argument, 0, 'C'},
+                                         {"em-max-iter", required_argument, 0, 'I'},
+                                         {"em-min-rounds", required_argument, 0, 'R'},
                                          {0, 0, 0, 0}};
   int c;
   int option_index = 0;
@@ -320,6 +325,24 @@ void ParseOptionsEM(int argc, char **argv, ProgramOptions &opt) {
       }
       case 'p': {
         opt.priors = optarg;
+        break;
+      }
+      
+      // new cases
+      case 'A': {
+        std::stringstream(optarg) >> opt.em_alpha_limit;
+        break;
+      }
+      case 'C': {
+        std::stringstream(optarg) >> opt.em_alpha_change_limit;
+        break;
+      }
+      case 'I': {
+        std::stringstream(optarg) >> opt.em_max_iterations;
+        break;
+      }
+      case 'R': {
+        std::stringstream(optarg) >> opt.em_min_rounds;
         break;
       }
 
@@ -2315,44 +2338,56 @@ void usageEM(bool valid_input = true) {
          << std::endl;
   }
   //      "----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|"
-  std::cout << "Usage: kallisto quant [arguments] FASTQ-files" << std::endl
-       << std::endl
-       << "Required arguments:" << std::endl
-       << "-i, --index=STRING            Filename for the kallisto index to be used for" << std::endl
-       << "                              quantification" << std::endl
-       << "-o, --output-dir=STRING       Directory to write output to" << std::endl
-       << std::endl
-       << "Optional arguments:" << std::endl
-       << "-b, --bootstrap-samples=INT   Number of bootstrap samples (default: 0)" << std::endl
-       << "    --seed=INT                Seed for the bootstrap sampling (default: 42)" << std::endl
-       << "    --plaintext               Output plaintext instead of HDF5" << std::endl
-       << "    --single                  Quantify single-end reads" << std::endl
-       << "    --single-overhang         Include reads where unobserved rest of fragment is" << std::endl
-       << "                              predicted to lie outside a transcript" << std::endl
-       << "    --fr-stranded             Strand specific reads, first read forward" << std::endl
-       << "    --rf-stranded             Strand specific reads, first read reverse" << std::endl
-       << "-l, --fragment-length=DOUBLE  Estimated average fragment length" << std::endl
-       << "-s, --sd=DOUBLE               Estimated standard deviation of fragment length" << std::endl
-       << "                              (default: -l, -s values are estimated from paired" << std::endl
-       << "                               end data, but are required when using --single)" << std::endl
-       << "-p, --priors                  Priors for the EM algorithm, either as raw counts or as"
-       << std::endl
-       << "                              probabilities. Pseudocounts are added to raw reads to"
-       << std::endl
-       << "                              prevent zero valued priors. Supplied in the same order"
-       << std::endl
-       << "                              as the transcripts in the transcriptome" << std::endl
-       #ifndef NO_HTSLIB
-       << "    --pseudobam               Save pseudoalignments to transcriptome to BAM file" << std::endl
-       << "    --genomebam               Project pseudoalignments to genome sorted BAM file" << std::endl
-       << "-g, --gtf                     GTF file for transcriptome information" << std::endl
-       << "                              (required for --genomebam)" << std::endl
-       << "-c, --chromosomes             Tab separated file with chromosome names and lengths" << std::endl
-       << "                              (optional for --genomebam, but recommended)" << std::endl
-       #endif // NO_HTSLIB
-       << "-t, --threads=INT             Number of threads to use (default: 1)" << std::endl
-       << "    --verbose                 Print out progress information every 1M proccessed reads"
-       << std::endl;
+  std::cout
+      << "Usage: kallisto quant [arguments] FASTQ-files" << std::endl
+      << std::endl
+      << "Required arguments:" << std::endl
+      << "-i, --index=STRING            Filename for the kallisto index to be used for" << std::endl
+      << "                              quantification" << std::endl
+      << "-o, --output-dir=STRING       Directory to write output to" << std::endl
+      << std::endl
+      << "Optional arguments:" << std::endl
+      << "-b, --bootstrap-samples=INT   Number of bootstrap samples (default: 0)" << std::endl
+      << "    --seed=INT                Seed for the bootstrap sampling (default: 42)" << std::endl
+      << "    --plaintext               Output plaintext instead of HDF5" << std::endl
+      << "    --single                  Quantify single-end reads" << std::endl
+      << "    --single-overhang         Include reads where unobserved rest of fragment is"
+      << std::endl
+      << "                              predicted to lie outside a transcript" << std::endl
+      << "    --fr-stranded             Strand specific reads, first read forward" << std::endl
+      << "    --rf-stranded             Strand specific reads, first read reverse" << std::endl
+      << "-l, --fragment-length=DOUBLE  Estimated average fragment length" << std::endl
+      << "-s, --sd=DOUBLE               Estimated standard deviation of fragment length"
+      << std::endl
+      << "                              (default: -l, -s values are estimated from paired"
+      << std::endl
+      << "                               end data, but are required when using --single)"
+      << std::endl
+      << "-p, --priors                  Priors for the EM algorithm, either as raw counts or as"
+      << std::endl
+      << "                              probabilities. Pseudocounts are added to raw reads to"
+      << std::endl
+      << "                              prevent zero valued priors. Supplied in the same order"
+      << std::endl
+      << "                              as the transcripts in the transcriptome" << std::endl
+#ifndef NO_HTSLIB
+      << "    --pseudobam               Save pseudoalignments to transcriptome to BAM file"
+      << std::endl
+      << "    --genomebam               Project pseudoalignments to genome sorted BAM file"
+      << std::endl
+      << "-g, --gtf                     GTF file for transcriptome information" << std::endl
+      << "                              (required for --genomebam)" << std::endl
+      << "-c, --chromosomes             Tab separated file with chromosome names and lengths"
+      << std::endl
+      << "                              (optional for --genomebam, but recommended)" << std::endl
+#endif  // NO_HTSLIB
+      << "-t, --threads=INT             Number of threads to use (default: 1)" << std::endl
+      << "    --verbose                 Print out progress information every 1M proccessed reads"
+      << "    --em-alpha-limit=DOUBLE   CUSTOM: EM alpha limit (default: 1e-7)" << std::endl
+      << "    --em-alpha-change=DOUBLE  CUSTOM: EM alpha change limit (default: 1e-2)" << std::endl
+      << "    --em-max-iter=INT         CUSTOM: Maximum EM iterations (default: 10000)" << std::endl
+      << "    --em-min-rounds=INT       CUSTOM: Minimum EM rounds (default: 50)" << std::endl
+      << std::endl;
 }
 
 void usageEMOnly() {

@@ -98,10 +98,16 @@ struct EMAlgorithm {
     assert(weight_map_.size() <= counts_.size());
 
     double denom;
-    const double alpha_limit = 1e-7;
-    const double alpha_change_limit = 1e-2;
-    const double alpha_change = 1e-2;
+
+    // use opt values
+    const double alpha_limit = opt.em_alpha_limit;
+    const double alpha_change_limit = opt.em_alpha_change_limit;
+    const double alpha_change = opt.em_alpha_change_limit;
     bool finalRound = false;
+    
+    // override default parameters
+    n_iter = opt.em_max_iterations;
+    min_rounds = opt.em_min_rounds;
 
     if (verbose) {
       std::cerr << "[   em] quantifying the abundances ..."; std::cerr.flush();

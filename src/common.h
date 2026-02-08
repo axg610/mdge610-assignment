@@ -91,6 +91,13 @@ struct BUSOptions {
 };
 
 struct ProgramOptions {
+
+  // tunable convergence parameters
+  double em_alpha_limit;
+  double em_alpha_change_limit;
+  int em_max_iterations;
+  int em_min_rounds;
+
   bool verbose;
   bool aa;
   bool distinguish;
@@ -204,7 +211,11 @@ ProgramOptions() :
   distinguish(false),
   d_list_overhang(1),
   do_union(false),
-  no_jump(false)
+  no_jump(false),
+  em_alpha_limit(1e-7),
+  em_alpha_change_limit(1e-2),
+  em_max_iterations(10000),
+  em_min_rounds(50)
   {}
 };
 
