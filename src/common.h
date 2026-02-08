@@ -95,6 +95,7 @@ struct ProgramOptions {
   // tunable convergence parameters
   double em_alpha_limit;
   double em_alpha_change_limit;
+  double em_alpha_change;
   int em_max_iterations;
   int em_min_rounds;
 
@@ -212,8 +213,10 @@ ProgramOptions() :
   d_list_overhang(1),
   do_union(false),
   no_jump(false),
+  // new defaults
   em_alpha_limit(1e-7),
   em_alpha_change_limit(1e-2),
+  em_alpha_change(1e-2),
   em_max_iterations(10000),
   em_min_rounds(50)
   {}

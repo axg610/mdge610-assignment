@@ -102,7 +102,7 @@ struct EMAlgorithm {
     // use opt values
     const double alpha_limit = opt.em_alpha_limit;
     const double alpha_change_limit = opt.em_alpha_change_limit;
-    const double alpha_change = opt.em_alpha_change_limit;
+    const double alpha_change = opt.em_alpha_change;
     bool finalRound = false;
     
     // override default parameters

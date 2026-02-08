@@ -261,6 +261,7 @@ void ParseOptionsEM(int argc, char **argv, ProgramOptions &opt) {
                                          // new options
                                          {"em-alpha-limit", required_argument, 0, 'A'},
                                          {"em-alpha-change", required_argument, 0, 'C'},
+                                         {"em-alpha-change-limit", required_argument, 0, 'L'},
                                          {"em-max-iter", required_argument, 0, 'I'},
                                          {"em-min-rounds", required_argument, 0, 'R'},
                                          {0, 0, 0, 0}};
@@ -334,6 +335,10 @@ void ParseOptionsEM(int argc, char **argv, ProgramOptions &opt) {
         break;
       }
       case 'C': {
+        std::stringstream(optarg) >> opt.em_alpha_change;
+        break;
+      }
+      case 'L': {
         std::stringstream(optarg) >> opt.em_alpha_change_limit;
         break;
       }
