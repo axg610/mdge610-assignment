@@ -1,0 +1,14 @@
+run_name,alpha_limit,runtime_seconds,iterations
+H2A,1e-12,40,95
+H2B,1e-11,36,95
+H2C,1e-10,37,95
+H2D,1e-9,37,95
+H2E,1e-8,38,95
+H2F,1e-7,34,95
+H2G,1e-6,37,95
+H2H,1e-5,35,95
+H2I,1e-4,34,95
+H2J,1e-3,35,95
+H2K,1e-2,36,95
+H2L,1e-1,38,95
+H2M,1,38,95

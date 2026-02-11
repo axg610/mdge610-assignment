@@ -1,0 +1,14 @@
+{
+	"n_targets": 110962,
+	"n_bootstraps": 0,
+	"n_processed": 1000000,
+	"n_pseudoaligned": 992724,
+	"n_unique": 229931,
+	"p_pseudoaligned": 99.3,
+	"p_unique": 23.0,
+	"kallisto_version": "0.52.0",
+	"index_version": 13,
+	"k-mer length": 31,
+	"start_time": "Sun Feb  8 13:06:22 2026",
+	"call": "./kallisto-master/build/src/kallisto quant -i ./data/gencode.v44.kidx -o ./output/hypothesis1/H1E -t 4 --em-alpha-change=0.1 --em-alpha-change-limit=0.01 --em-alpha-limit=1e-7 --em-max-iter=10000 --em-min-rounds=50 ./data/sim_reads_1.fastq.gz ./data/sim_reads_2.fastq.gz"
+}
